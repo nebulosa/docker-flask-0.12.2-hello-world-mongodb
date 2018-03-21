@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  mongodb:
+    image: aashreys/mongo-auth:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb-data:/data/db
+    environment:
+      - AUTH=yes
+      - MONGODB_ADMIN_USER=admin
+      - MONGODB_ADMIN_PASS=admin
+      - MONGODB_APPLICATION_DATABASE=hello-world
+      - MONGODB_APPLICATION_USER=hello-world
+      - MONGODB_APPLICATION_PASS=hello-world
+
+  hello-world:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/usr/src/app
+    working_dir: "/usr/src/app"
+    environment:
+      - LANG=C.UTF-8
+      - FLASK_APP=run.py
