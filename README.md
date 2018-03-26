@@ -7,7 +7,7 @@ Usage
 -----
 
     #development
-    $ ./setup.sh
+    $ ./setup.sh [docker-compose-file]
 
 Access http://localhost:5000
 

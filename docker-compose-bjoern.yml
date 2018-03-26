@@ -15,16 +15,23 @@ services:
       - MONGODB_APPLICATION_USER=hello-world
       - MONGODB_APPLICATION_PASS=hello-world
 
+  nginx:
+    image: nginx:1.13.10-alpine
+    ports:
+      - "5000:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - hello-world
+
   hello-world:
     build: .
-    ports:
-      - "5000:5000"
     depends_on:
       - mongodb
     volumes:
       - .:/usr/src/app
     working_dir: "/usr/src/app"
+    command: python run.bjoern.py
     restart: on-failure:5
     environment:
       - LANG=C.UTF-8
-      - FLASK_APP=run.py
