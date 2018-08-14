@@ -1,2 +1,2 @@
-flask
+flask==0.12.2 #https://github.com/pallets/flask/issues/2725
 flask-mongoengine
