@@ -3,8 +3,6 @@ version: '3.4'
 services:
   mongodb:
     image: aashreys/mongo-auth:latest
-    ports:
-      - "27017:27017"
     volumes:
       - ./mongodb-data:/data/db
     environment:
@@ -14,6 +12,8 @@ services:
       - MONGODB_APPLICATION_DATABASE=app
       - MONGODB_APPLICATION_USER=app
       - MONGODB_APPLICATION_PASS=app
+    networks:
+      - backend
 
   nginx:
     image: nginx:1.13.10-alpine
@@ -23,6 +23,8 @@ services:
       - ./nginx:/etc/nginx/conf.d
     depends_on:
       - app
+    networks:
+      - frontend
 
   app:
     build: .
@@ -33,5 +35,14 @@ services:
     working_dir: "/usr/src/app"
     command: python run.bjoern.py
     restart: on-failure:5
+    networks:
+      - frontend
+      - backend
     environment:
       - LANG=C.UTF-8
+
+networks:
+  frontend:
+    driver: bridge #or overlay in swarm mode
+  backend:
+    driver: bridge #or overlay in swarm mode
