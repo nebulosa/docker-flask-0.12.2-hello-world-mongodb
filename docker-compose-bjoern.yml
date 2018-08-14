@@ -11,9 +11,9 @@ services:
       - AUTH=yes
       - MONGODB_ADMIN_USER=admin
       - MONGODB_ADMIN_PASS=admin
-      - MONGODB_APPLICATION_DATABASE=hello-world
-      - MONGODB_APPLICATION_USER=hello-world
-      - MONGODB_APPLICATION_PASS=hello-world
+      - MONGODB_APPLICATION_DATABASE=app
+      - MONGODB_APPLICATION_USER=app
+      - MONGODB_APPLICATION_PASS=app
 
   nginx:
     image: nginx:1.13.10-alpine
@@ -22,9 +22,9 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
     depends_on:
-      - hello-world
+      - app
 
-  hello-world:
+  app:
     build: .
     depends_on:
       - mongodb
