@@ -5,6 +5,7 @@ services:
     image: aashreys/mongo-auth:latest
     volumes:
       - ./mongodb-data:/data/db
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - AUTH=yes
       - MONGODB_ADMIN_USER=admin
@@ -20,7 +21,8 @@ services:
     ports:
       - "5000:80"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/default/:/etc/nginx/conf.d
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - app
     networks:
@@ -32,14 +34,18 @@ services:
       - mongodb
     volumes:
       - .:/usr/src/app
+      - /etc/localtime:/etc/localtime:ro
     working_dir: "/usr/src/app"
     restart: on-failure:5
     command: python run.cherry.py
     networks:
       - frontend
       - backend
+    #env_file:
+      #- .env
     environment:
       - LANG=C.UTF-8
+      - APP_ENVIRONMENT=production
 
 networks:
   frontend:

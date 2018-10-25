@@ -3,6 +3,8 @@ version: '3.4'
 services:
   mongodb:
     image: aashreys/mongo-auth:latest
+    #ports:
+      #- "27017:27017"
     volumes:
       - ./mongodb-data:/data/db
       - /etc/localtime:/etc/localtime:ro
@@ -13,20 +15,34 @@ services:
       - MONGODB_APPLICATION_DATABASE=app
       - MONGODB_APPLICATION_USER=app
       - MONGODB_APPLICATION_PASS=app
-    networks:
-      - backend
 
   nginx:
     image: nginx:1.13.10-alpine
     ports:
-      - "5000:80"
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx/default/:/etc/nginx/conf.d
+      - ./nginx/default-ssl/:/etc/nginx/conf.d
+      - ./letsencrypt/certs/:/certs/
+      - ./letsencrypt/challenge/:/var/www/letsencrypt/challenge/
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - app
-    networks:
-      - frontend
+      - letsencrypt
+
+  letsencrypt:
+    build: letsencrypt
+    #entrypoint: certbot-wrapper.sh
+    command: /bin/true
+    volumes:
+      - ./letsencrypt/certbot-wrapper.sh:/usr/bin/certbot-wrapper.sh
+      - ./letsencrypt/certs/:/etc/letsencrypt/certs/
+      - ./letsencrypt/challenge/:/etc/letsencrypt/challenge/
+      - ./letsencrypt/accounts/:/etc/letsencrypt/accounts/
+    #env_file:
+      #- .env
+    #environment:
+      #- APP_DOMAIN=${APP_DOMAIN}
 
   app:
     build: .
@@ -38,17 +54,8 @@ services:
     working_dir: "/usr/src/app"
     command: python run.bjoern.py
     restart: on-failure:5
-    networks:
-      - frontend
-      - backend
     #env_file:
       #- .env
     environment:
       - LANG=C.UTF-8
       - APP_ENVIRONMENT=production
-
-networks:
-  frontend:
-    driver: bridge #or overlay in swarm mode
-  backend:
-    driver: bridge #or overlay in swarm mode
