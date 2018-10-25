@@ -2,6 +2,15 @@ import os
 import urllib.parse
 
 class Config(object):
+    #per environment settings
+    APP_ENVIRONMENT = os.environ.get('APP_ENVIRONMENT') or 'development'
+
+    if   APP_ENVIRONMENT == 'development':
+        DEBUG   = True
+        TESTING = True #disable recaptcha
+    elif APP_ENVIRONMENT == 'production' :
+        DEBUG  = False
+
     #flask-mongoengine
     MONGODB_HOST     = os.environ.get('MONGODB_HOST')     or 'mongodb'
     MONGODB_TCP_PORT = os.environ.get('MONGODB_TCP_PORT') or 27017
