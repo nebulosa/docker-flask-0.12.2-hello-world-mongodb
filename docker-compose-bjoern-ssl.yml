@@ -23,26 +23,10 @@ services:
       - "443:443"
     volumes:
       - ./nginx/default-ssl/:/etc/nginx/conf.d
-      - ./letsencrypt/certs/:/certs/
-      - ./letsencrypt/challenge/:/var/www/letsencrypt/challenge/
+      - ./certs/:/certs/
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - app
-      - letsencrypt
-
-  letsencrypt:
-    build: letsencrypt
-    #entrypoint: certbot-wrapper.sh
-    command: /bin/true
-    volumes:
-      - ./letsencrypt/certbot-wrapper.sh:/usr/bin/certbot-wrapper.sh
-      - ./letsencrypt/certs/:/etc/letsencrypt/certs/
-      - ./letsencrypt/challenge/:/etc/letsencrypt/challenge/
-      - ./letsencrypt/accounts/:/etc/letsencrypt/accounts/
-    #env_file:
-      #- .env
-    #environment:
-      #- APP_DOMAIN=${APP_DOMAIN}
 
   app:
     build: .
