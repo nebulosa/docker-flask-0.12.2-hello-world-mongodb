@@ -1,2 +1,15 @@
 flask==0.12.2 #https://github.com/pallets/flask/issues/2725
 flask-mongoengine #0.9.5
+Jinja2==2.11.3
+pymongo==3.11.3
+MarkupSafe==1.1.1
+mongoengine==0.22.1
+itsdangerous==1.1.0
+
+#requests          #2.18.4
+#Unidecode         #1.0.22
+#flask-wtf         #0.14.2
+#flask-login       #0.4.1
+#flask-bcrypt      #0.7.1
+#python-magic      #0.4.15
+#email_validator
